@@ -97,6 +97,7 @@ def toggle_record(e):
     global is_paused
     global video_format
     global video_path
+    global video_filename
     if is_recording:
         is_paused = True
         is_recording = False
@@ -109,6 +110,7 @@ def toggle_record(e):
         ui.recordButton.setPixmap(NewPixmap('stop.png'))
         video_format = ui.videoformatEdit.text()
         video_path = ui.videopathEdit.text()
+        video_filename = ui.videofilenameEdit.text()
         NewThread(target=recorder).start()
         ui.pauseButton.setEnabled(True)
 

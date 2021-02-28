@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
-    <height>550</height>
+    <width>640</width>
+    <height>480</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>640</width>
+    <height>480</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -52,7 +58,7 @@ QPushButton:hover {
    <widget class="QLabel" name="recordButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>520</x>
       <y>10</y>
       <width>101</width>
       <height>91</height>
@@ -74,11 +80,14 @@ QPushButton:hover {
     </property>
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>390</x>
       <y>10</y>
       <width>101</width>
       <height>91</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string/>
@@ -177,7 +186,7 @@ border-radius: 15px;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
+      <y>190</y>
       <width>111</width>
       <height>21</height>
      </rect>
@@ -207,7 +216,7 @@ border-radius: 15px;</string>
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>100</y>
+      <y>180</y>
       <width>71</width>
       <height>41</height>
      </rect>
@@ -226,6 +235,64 @@ border-radius: 15px;</string>
     </property>
     <property name="text">
      <string>mp4</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="videofilenameLabel">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>100</y>
+      <width>151</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">* {
+	color: rgb(174, 176, 190);
+	background-color: rgba(0, 0, 0, 0);
+}</string>
+    </property>
+    <property name="text">
+     <string>Video Name:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="videofilenameEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgb(174, 176, 190);
+border-radius: 15px;</string>
+    </property>
+    <property name="text">
+     <string>Output</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
