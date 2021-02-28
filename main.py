@@ -33,7 +33,7 @@ def setup_binds():
 def recorder():
     global is_recording
     global is_paused
-    resolution = (1280, 1024)
+    resolution = (width, height)
     codec = cv2.VideoWriter_fourcc(*"XVID")
     filename = "Recording.mp4"
     out = cv2.VideoWriter(filename, codec, 20, resolution)
