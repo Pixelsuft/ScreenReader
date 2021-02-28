@@ -42,7 +42,12 @@ def recorder():
 
 def toggle_pause(e):
     global is_paused
-    is_paused = not is_paused
+    if is_paused:
+        is_paused = False
+        ui.pauseButton.setPixmap(NewPixmap('pause.png'))
+    else:
+        is_paused = True
+        ui.pauseButton.setPixmap(NewPixmap('record.png'))
 
 
 def toggle_record(e):
@@ -53,6 +58,7 @@ def toggle_record(e):
         is_recording = False
         ui.pauseButton.setDisabled(True)
         ui.recordButton.setPixmap(NewPixmap('record.png'))
+        ui.pauseButton.setPixmap(NewPixmap('pause.png'))
     else:
         is_paused = False
         is_recording = True
