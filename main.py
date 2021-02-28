@@ -30,7 +30,7 @@ mouse_script = 'rectangle(((mouse_x, mouse_y), (mouse_x + 10, mouse_y + 10)), wi
                '255))) '
 video_filename = 'Recording'
 video_format = 'mp4'
-video_path = f'C:\\users\\{get_user_name()}\\Screen Reader\\'
+video_path = f'C:\\Users\\{get_user_name()}\\Screen Reader\\'
 
 
 def get_video_path():
@@ -46,9 +46,17 @@ def get_video_path():
         return f'{full_path}.{video_format}'
 
 
-def setup_binds():
+def select_video_path():
+    dialog = Widgets.QFileDialog()
+    foo_dir = dialog.getExistingDirectory(MainWindow, 'Select Path')
+    ui.videopathEdit.setText(foo_dir.replace('/', '\\'))
+
+
+def setup_ui():
     ui.recordButton.mousePressEvent = toggle_record
     ui.pauseButton.mousePressEvent = toggle_pause
+    ui.videopathButton.clicked.connect(select_video_path)
+    ui.videopathEdit.setText(video_path)
 
 
 def recorder():
@@ -87,6 +95,8 @@ def toggle_pause(e):
 def toggle_record(e):
     global is_recording
     global is_paused
+    global video_format
+    global video_path
     if is_recording:
         is_paused = True
         is_recording = False
@@ -97,6 +107,8 @@ def toggle_record(e):
         is_paused = False
         is_recording = True
         ui.recordButton.setPixmap(NewPixmap('stop.png'))
+        video_format = ui.videoformatEdit.text()
+        video_path = ui.videopathEdit.text()
         NewThread(target=recorder).start()
         ui.pauseButton.setEnabled(True)
 
@@ -105,7 +117,7 @@ app = Widgets.QApplication([__name__])
 MainWindow = Widgets.QMainWindow()
 ui = NewMainWindow()
 ui.setupUi(MainWindow)
-setup_binds()
+setup_ui()
 MainWindow.show()
 result = app.exec_()
 clear_cache()

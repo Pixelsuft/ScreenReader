@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(647, 173)
+        MainWindow.resize(647, 550)
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(11)
@@ -26,6 +26,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("* {\n"
 "    background-color: rgb(24, 26, 40);\n"
+"    color: rgb(174, 176, 190);\n"
 "}\n"
 "QLabel {\n"
 "    background-color: rgb(24, 26, 40);\n"
@@ -33,22 +34,96 @@ class Ui_MainWindow(object):
 "QLabel:hover {\n"
 "    background-color: rgb(87, 95, 145);\n"
 "}\n"
-"")
+"QPushButton {\n"
+"    border: 1px solid rgb(174, 176, 190);\n"
+"    border-radius: 15px;\n"
+"    background-color: rgb(24, 26, 40);\n"
+"    color: rgb(174, 176, 190);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    border: 1px solid rgb(174, 176, 190);\n"
+"    border-radius: 15px;\n"
+"    background-color: rgb(87, 95, 145);\n"
+"}")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.recordButton = QtWidgets.QLabel(self.centralwidget)
-        self.recordButton.setGeometry(QtCore.QRect(510, 40, 101, 91))
+        self.recordButton.setGeometry(QtCore.QRect(530, 10, 101, 91))
         self.recordButton.setText("")
         self.recordButton.setPixmap(QtGui.QPixmap("record.png"))
         self.recordButton.setAlignment(QtCore.Qt.AlignCenter)
         self.recordButton.setObjectName("recordButton")
         self.pauseButton = QtWidgets.QLabel(self.centralwidget)
         self.pauseButton.setEnabled(False)
-        self.pauseButton.setGeometry(QtCore.QRect(380, 40, 101, 91))
+        self.pauseButton.setGeometry(QtCore.QRect(400, 10, 101, 91))
         self.pauseButton.setText("")
         self.pauseButton.setPixmap(QtGui.QPixmap("pause.png"))
         self.pauseButton.setAlignment(QtCore.Qt.AlignCenter)
         self.pauseButton.setObjectName("pauseButton")
+        self.videopathLabel = QtWidgets.QLabel(self.centralwidget)
+        self.videopathLabel.setGeometry(QtCore.QRect(10, 20, 351, 21))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.videopathLabel.setFont(font)
+        self.videopathLabel.setStyleSheet("* {\n"
+"    color: rgb(174, 176, 190);\n"
+"    background-color: rgba(0, 0, 0, 0);\n"
+"}")
+        self.videopathLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.videopathLabel.setObjectName("videopathLabel")
+        self.videopathEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.videopathEdit.setGeometry(QtCore.QRect(10, 50, 231, 41))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.videopathEdit.setFont(font)
+        self.videopathEdit.setStyleSheet("border: 1px solid rgb(174, 176, 190);\n"
+"border-radius: 15px;")
+        self.videopathEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.videopathEdit.setObjectName("videopathEdit")
+        self.videopathButton = QtWidgets.QPushButton(self.centralwidget)
+        self.videopathButton.setEnabled(True)
+        self.videopathButton.setGeometry(QtCore.QRect(250, 50, 91, 41))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.videopathButton.setFont(font)
+        self.videopathButton.setStyleSheet("border: 1px solid rgb(174, 176, 190);\n"
+"border-radius: 15px;")
+        self.videopathButton.setObjectName("videopathButton")
+        self.videoformatLabel = QtWidgets.QLabel(self.centralwidget)
+        self.videoformatLabel.setGeometry(QtCore.QRect(10, 110, 111, 21))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.videoformatLabel.setFont(font)
+        self.videoformatLabel.setStyleSheet("* {\n"
+"    color: rgb(174, 176, 190);\n"
+"    background-color: rgba(0, 0, 0, 0);\n"
+"}")
+        self.videoformatLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.videoformatLabel.setObjectName("videoformatLabel")
+        self.videoformatEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.videoformatEdit.setGeometry(QtCore.QRect(130, 100, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.videoformatEdit.setFont(font)
+        self.videoformatEdit.setStyleSheet("border: 1px solid rgb(174, 176, 190);\n"
+"border-radius: 15px;")
+        self.videoformatEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.videoformatEdit.setObjectName("videoformatEdit")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -57,6 +132,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Screen Reader"))
+        self.videopathLabel.setText(_translate("MainWindow", "Video Path:"))
+        self.videopathButton.setText(_translate("MainWindow", "Select!"))
+        self.videoformatLabel.setText(_translate("MainWindow", "Video format:"))
+        self.videoformatEdit.setText(_translate("MainWindow", "mp4"))
 
 
 if __name__ == "__main__":
