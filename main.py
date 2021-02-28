@@ -3,6 +3,7 @@ from sys import exit as return_exit
 from os import getlogin as get_user_name
 from os import access as file_exists
 from os import F_OK as file_exists_param
+from os import mkdir as make_dir
 from os.path import join as join_path
 from os.path import isdir as is_folder
 from PyQt5 import QtWidgets as Widgets
@@ -34,6 +35,8 @@ video_path = f'C:\\Users\\{get_user_name()}\\Screen Reader\\'
 
 
 def get_video_path():
+    if not is_folder(video_path):
+        make_dir(video_path)
     full_path = join_path(video_path, video_filename)
     if file_exists(f'{full_path}.{video_format}', file_exists_param):
         i = 1
