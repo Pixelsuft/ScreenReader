@@ -6,7 +6,9 @@ from ui import Ui_MainWindow as NewMainWindow
 from threading import Thread as NewThread
 from win32api import GetSystemMetrics as GetScreenSize
 from pyautogui import screenshot as shot
+from pyautogui import position as pos
 from numpy import array as np_array
+from PIL import ImageDraw
 import cv2
 
 
@@ -16,6 +18,11 @@ width = int(GetScreenSize(1))
 
 is_recording = False
 is_paused = False
+
+
+show_cursor = True
+mouse_script = 'rectangle(((mouse_x, mouse_y), (mouse_x + 10, mouse_y + 10)), width=1, outline=0, fill=((255, 255, ' \
+               '255))) '
 
 
 def setup_binds():
@@ -33,6 +40,12 @@ def recorder():
     while is_recording:
         while not is_paused:
             img = shot()
+            if show_cursor:
+                draw = ImageDraw.Draw(img)
+                mouse_x, mouse_y = pos()
+                for i in mouse_script.split('\n'):
+                    if i:
+                        eval(f'draw.{i}')
             frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
             out.write(frame)
     is_recording = False
