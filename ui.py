@@ -42,6 +42,13 @@ class Ui_MainWindow(object):
         self.recordButton.setPixmap(QtGui.QPixmap("record.png"))
         self.recordButton.setAlignment(QtCore.Qt.AlignCenter)
         self.recordButton.setObjectName("recordButton")
+        self.pauseButton = QtWidgets.QLabel(self.centralwidget)
+        self.pauseButton.setEnabled(False)
+        self.pauseButton.setGeometry(QtCore.QRect(380, 40, 101, 91))
+        self.pauseButton.setText("")
+        self.pauseButton.setPixmap(QtGui.QPixmap("pause.png"))
+        self.pauseButton.setAlignment(QtCore.Qt.AlignCenter)
+        self.pauseButton.setObjectName("pauseButton")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

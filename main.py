@@ -15,33 +15,50 @@ width = int(GetScreenSize(1))
 
 
 is_recording = False
+is_paused = False
 
 
 def setup_binds():
     ui.recordButton.mousePressEvent = toggle_record
+    ui.pauseButton.mousePressEvent = toggle_pause
 
 
 def recorder():
+    global is_recording
+    global is_paused
     resolution = (1280, 1024)
     codec = cv2.VideoWriter_fourcc(*"XVID")
     filename = "Recording.mp4"
     out = cv2.VideoWriter(filename, codec, 20, resolution)
     while is_recording:
-        img = shot()
-        frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
-        out.write(frame)
+        while not is_paused:
+            img = shot()
+            frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
+            out.write(frame)
+    is_recording = False
+    is_paused = False
     out.release()
+
+
+def toggle_pause(e):
+    global is_paused
+    is_paused = not is_paused
 
 
 def toggle_record(e):
     global is_recording
+    global is_paused
     if is_recording:
+        is_paused = True
         is_recording = False
+        ui.pauseButton.setDisabled(True)
         ui.recordButton.setPixmap(NewPixmap('record.png'))
     else:
+        is_paused = False
         is_recording = True
         ui.recordButton.setPixmap(NewPixmap('stop.png'))
         NewThread(target=recorder).start()
+        ui.pauseButton.setEnabled(True)
 
 
 app = Widgets.QApplication([__name__])
