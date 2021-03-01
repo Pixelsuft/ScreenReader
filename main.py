@@ -26,12 +26,13 @@ is_recording = False
 is_paused = False
 
 
-show_cursor = True
+show_mouse = True
 mouse_script = 'rectangle(((mouse_x, mouse_y), (mouse_x + 10, mouse_y + 10)), width=1, outline=0, fill=((255, 255, ' \
                '255))) '
 video_filename = 'Recording'
 video_format = 'mp4'
-video_path = f'C:\\Users\\{get_user_name()}\\Screen Reader\\'
+# video_path = f'C:\\Users\\{get_user_name()}\\Videos\\Screen Reader\\'
+video_path = '.'
 
 
 def get_video_path():
@@ -47,6 +48,13 @@ def get_video_path():
                 return f'{full_path} ({i}).{video_format}'
     else:
         return f'{full_path}.{video_format}'
+
+
+def stop_record():
+    global is_recording
+    global is_paused
+    is_paused = True
+    is_recording = False
 
 
 def select_video_path():
@@ -65,12 +73,38 @@ def setup_ui():
 def recorder():
     global is_recording
     global is_paused
-    resolution = (width, height)
+    resolution = (1280, 1024)
     codec = cv2.VideoWriter_fourcc(*"XVID")
     filename = get_video_path()
     out = cv2.VideoWriter(filename, codec, 20, resolution)
     while is_recording:
         while not is_paused:
+            img = shot()
+            if show_mouse:
+                draw = ImageDraw.Draw(img)
+                mouse_x, mouse_y = pos()
+                for i in mouse_script.split('\n'):
+                    if i:
+                        eval(f'draw.{i}')
+            frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
+            out.write(frame)
+    out.release()
+    cv2.destroyAllWindows()
+    is_recording = False
+    is_paused = False
+
+
+def recorder1():
+    global is_recording
+    global is_paused
+    resolution = tuple((width, height))
+    codec = cv2.VideoWriter_fourcc(*"XVID")
+    filename = 'Output.avi'
+    out = cv2.VideoWriter(filename, codec, 1, (1280, 1024))
+    print('start')
+    while is_recording:
+        while not is_paused:
+            print('r')
             img = shot()
             if show_cursor:
                 draw = ImageDraw.Draw(img)
@@ -79,10 +113,12 @@ def recorder():
                     if i:
                         eval(f'draw.{i}')
             frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
-            out.write(frame)
+            cv2.imshow('x', frame)
+    print('stop')
+    out.release()
+    cv2.destroyAllWindows()
     is_recording = False
     is_paused = False
-    out.release()
 
 
 def toggle_pause(e):
@@ -125,5 +161,6 @@ ui.setupUi(MainWindow)
 setup_ui()
 MainWindow.show()
 result = app.exec_()
+stop_record()
 clear_cache()
 return_exit(result)
