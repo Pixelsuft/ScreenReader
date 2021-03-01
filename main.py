@@ -1,9 +1,10 @@
 from clear_cache import clear as clear_cache
 from sys import exit as return_exit
-from os import getlogin as get_user_name
 from os import access as file_exists
 from os import F_OK as file_exists_param
 from os import mkdir as make_dir
+from os import name as os_type
+from os import getcwd as get_current_dir
 from os.path import join as join_path
 from os.path import isdir as is_folder
 from PyQt5 import QtWidgets as Widgets
@@ -18,12 +19,10 @@ from PIL import ImageDraw
 import cv2
 
 
-height = int(GetScreenSize(0))
-width = int(GetScreenSize(1))
-
-
 is_recording = False
 is_paused = False
+width = int(GetScreenSize(0))
+height = int(GetScreenSize(1))
 
 
 show_mouse = True
@@ -31,8 +30,10 @@ mouse_script = 'rectangle(((mouse_x, mouse_y), (mouse_x + 10, mouse_y + 10)), wi
                '255))) '
 video_filename = 'Recording'
 video_format = 'mp4'
-# video_path = f'C:\\Users\\{get_user_name()}\\Videos\\Screen Reader\\'
-video_path = '.'
+video_path = get_current_dir()
+if os_type == 'nt':
+    from os import getlogin as get_user_name
+    video_path = f'C:\\Users\\{get_user_name()}\\Videos\\Screen Reader\\'
 
 
 def get_video_path():
@@ -73,10 +74,9 @@ def setup_ui():
 def recorder():
     global is_recording
     global is_paused
-    resolution = (1280, 1024)
     codec = cv2.VideoWriter_fourcc(*"XVID")
     filename = get_video_path()
-    out = cv2.VideoWriter(filename, codec, 20, resolution)
+    out = cv2.VideoWriter(filename, codec, 20, tuple((width, height)))
     while is_recording:
         while not is_paused:
             img = shot()
