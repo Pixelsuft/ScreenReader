@@ -26,7 +26,7 @@ height = int(GetScreenSize(1))
 
 
 show_mouse = True
-mouse_script = 'rectangle(((mouse_x, mouse_y), (mouse_x + 10, mouse_y + 10)), width=1, outline=0, fill=((255, 255, ' \
+mouse_script = 'rectangle(((mouse_x - 5, mouse_y - 5), (mouse_x + 5, mouse_y + 5)), width=1, outline=0, fill=((255, 255, ' \
                '255))) '
 video_filename = 'Recording'
 video_format = 'mp4'
