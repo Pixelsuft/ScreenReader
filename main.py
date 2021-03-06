@@ -21,13 +21,12 @@ import cv2
 
 is_recording = False
 is_paused = False
-width = int(GetScreenSize(0))
-height = int(GetScreenSize(1))
+screen_width = int(GetScreenSize(0))
+screen_height = int(GetScreenSize(1))
 
 
-show_mouse = True
-mouse_script = 'rectangle(((mouse_x - 5, mouse_y - 5), (mouse_x + 5, mouse_y + 5)), width=1, outline=0, fill=((255, 255, ' \
-               '255))) '
+mouse_script = 'draw.rectangle(((mouse_x - 5, mouse_y - 5), (mouse_x + 5, mouse_y + 5))'
+mouse_script += ', width=1, outline=0, fill=((255, 255, 255)))'
 video_filename = 'Recording'
 video_format = 'mp4'
 video_path = get_current_dir()
@@ -64,57 +63,95 @@ def select_video_path():
     ui.videopathEdit.setText(foo_dir.replace('/', '\\'))
 
 
+def load_config():
+    global mouse_script
+    global video_filename
+    global video_format
+    global video_path
+    if file_exists('config.txt', file_exists_param):
+        temp_f = open('config.txt', 'r')
+        config = temp_f.read().split('\n')
+        temp_f.close()
+        video_path = config[0]
+        video_filename = config[1]
+        video_format = config[2]
+        ui.xEdit.setText(config[3])
+        ui.yEdit.setText(config[4])
+        ui.widthEdit.setText(config[5])
+        ui.heightEdit.setText(config[6])
+    if file_exists('mouse_script.txt', file_exists_param):
+        temp_f = open('mouse_script.txt', 'r')
+        mouse_script = temp_f.read()
+        temp_f.close()
+        ui.mousescriptText.setPlainText(mouse_script)
+
+
+def save_config():
+    temp_f = open('config.txt', 'w')
+    config = f'{video_path}\n{video_filename}\n{video_format}\n{ui.xEdit.text()}\n{ui.yEdit.text()}\n'
+    config += f'{ui.widthEdit.text()}\n{ui.heightEdit.text()}'
+    temp_f.write(config)
+    temp_f.close()
+    temp_f = open('mouse_script.txt', 'w')
+    temp_f.write(
+        mouse_script
+    )
+    temp_f.close()
+
+
 def setup_ui():
+    load_config()
     ui.recordButton.mousePressEvent = toggle_record
     ui.pauseButton.mousePressEvent = toggle_pause
     ui.videopathButton.clicked.connect(select_video_path)
     ui.videopathEdit.setText(video_path)
+    ui.videofilenameEdit.setText(video_filename)
+    ui.videoformatEdit.setText(video_format)
 
 
 def recorder():
     global is_recording
     global is_paused
+    global mouse_script
     codec = cv2.VideoWriter_fourcc(*"XVID")
     filename = get_video_path()
+    mouse_script = ui.mousescriptText.toPlainText()
+    left, top, width, height = 0, 0, screen_width, screen_height
+    try:
+        left = int(ui.xEdit.text())
+        top = int(ui.yEdit.text())
+        width = int(ui.widthEdit.text())
+        height = int(ui.heightEdit.text())
+    except ValueError:
+        is_paused = True
+        is_recording = False
+        ui.pauseButton.setDisabled(True)
+        ui.recordButton.setPixmap(NewPixmap('record.png'))
+        ui.pauseButton.setPixmap(NewPixmap('pause.png'))
+    if left < 0:
+        left = 0
+    if top < 0:
+        top = 0
+    if left > screen_width:
+        left = 0
+    if top > screen_height:
+        top = 0
+    if width + left > screen_width:
+        width = screen_width - left - 1
+    if height + top > screen_height:
+        height = screen_height - height - 1
     out = cv2.VideoWriter(filename, codec, 20, tuple((width, height)))
     while is_recording:
         while not is_paused:
-            img = shot()
-            if show_mouse:
-                draw = ImageDraw.Draw(img)
-                mouse_x, mouse_y = pos()
+            img = shot().crop((left, top, width + left, height + top))
+            draw = ImageDraw.Draw(img)
+            mouse_x, mouse_y = pos()
+            if mouse_script:
                 for i in mouse_script.split('\n'):
                     if i:
-                        eval(f'draw.{i}')
+                        eval(i)
             frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
             out.write(frame)
-    out.release()
-    cv2.destroyAllWindows()
-    is_recording = False
-    is_paused = False
-
-
-def recorder1():
-    global is_recording
-    global is_paused
-    resolution = tuple((width, height))
-    codec = cv2.VideoWriter_fourcc(*"XVID")
-    filename = 'Output.avi'
-    out = cv2.VideoWriter(filename, codec, 1, (1280, 1024))
-    print('start')
-    while is_recording:
-        while not is_paused:
-            print('r')
-            img = shot()
-            if show_cursor:
-                draw = ImageDraw.Draw(img)
-                mouse_x, mouse_y = pos()
-                for i in mouse_script.split('\n'):
-                    if i:
-                        eval(f'draw.{i}')
-            frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
-            cv2.imshow('x', frame)
-    print('stop')
     out.release()
     cv2.destroyAllWindows()
     is_recording = False
@@ -161,6 +198,7 @@ ui.setupUi(MainWindow)
 setup_ui()
 MainWindow.show()
 result = app.exec_()
+save_config()
 stop_record()
 clear_cache()
 return_exit(result)
