@@ -146,7 +146,6 @@ def load_config():
         ui.widthEdit.setText(config[5])
         ui.heightEdit.setText(config[6])
         ui.autocropText.setText(config[7])
-        print(config[8])
         if config[8] == 'True':
             ui.recordaudioLabel.setChecked(True)
         if config[9] == 'True':
