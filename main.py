@@ -145,6 +145,7 @@ def load_config():
         ui.yEdit.setText(config[4])
         ui.widthEdit.setText(config[5])
         ui.heightEdit.setText(config[6])
+        ui.autocropText.setText(config[7])
     if file_exists('mouse_script.txt', file_exists_param):
         temp_f = open('mouse_script.txt', 'r')
         mouse_script = temp_f.read()
@@ -155,7 +156,7 @@ def load_config():
 def save_config():
     temp_f = open('config.txt', 'w')
     config = f'{video_path}\n{video_filename}\n{video_format}\n{ui.xEdit.text()}\n{ui.yEdit.text()}\n'
-    config += f'{ui.widthEdit.text()}\n{ui.heightEdit.text()}'
+    config += f'{ui.widthEdit.text()}\n{ui.heightEdit.text()}\n{ui.autocropText.text()}'
     temp_f.write(config)
     temp_f.close()
     temp_f = open('mouse_script.txt', 'w')
@@ -231,6 +232,7 @@ def recorder():
     ui.pauseButton.setDisabled(True)
     ui.widthEdit.setEnabled(True)
     ui.heightEdit.setEnabled(True)
+    ui.autocropText.setEnabled(True)
     ui.automoveLabel.setEnabled(True)
     ui.recordButton.setPixmap(NewPixmap('record.png'))
     ui.pauseButton.setPixmap(NewPixmap('pause.png'))
@@ -266,6 +268,7 @@ def toggle_record(e):
         ui.widthEdit.setDisabled(True)
         ui.heightEdit.setDisabled(True)
         ui.automoveLabel.setDisabled(True)
+        ui.autocropText.setDisabled(True)
         video_format = ui.videoformatEdit.text()
         video_path = ui.videopathEdit.text()
         video_filename = ui.videofilenameEdit.text()

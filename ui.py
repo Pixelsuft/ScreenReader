@@ -341,7 +341,7 @@ class Ui_MainWindow(object):
         self.windowsBox.setItemText(0, _translate("MainWindow", "DISPLAY1"))
         self.automoveLabel.setText(_translate("MainWindow", "Auto Move"))
         self.autocropLabel.setText(_translate("MainWindow", "Auto Crop:"))
-        self.autocropText.setText(_translate("MainWindow", "8x8x-8x-8"))
+        self.autocropText.setText(_translate("MainWindow", "3x30x-3x-1"))
 
 
 if __name__ == "__main__":
