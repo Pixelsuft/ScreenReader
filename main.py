@@ -146,6 +146,12 @@ def load_config():
         ui.widthEdit.setText(config[5])
         ui.heightEdit.setText(config[6])
         ui.autocropText.setText(config[7])
+        print(config[8])
+        if config[8] == 'True':
+            ui.recordaudioLabel.setChecked(True)
+        if config[9] == 'True':
+            ui.audiospecLabel.setChecked(True)
+        ui.autocropText.setText(config[7])
     if file_exists('mouse_script.txt', file_exists_param):
         temp_f = open('mouse_script.txt', 'r')
         mouse_script = temp_f.read()
@@ -156,7 +162,8 @@ def load_config():
 def save_config():
     temp_f = open('config.txt', 'w')
     config = f'{video_path}\n{video_filename}\n{video_format}\n{ui.xEdit.text()}\n{ui.yEdit.text()}\n'
-    config += f'{ui.widthEdit.text()}\n{ui.heightEdit.text()}\n{ui.autocropText.text()}'
+    config += f'{ui.widthEdit.text()}\n{ui.heightEdit.text()}\n{ui.autocropText.text()}\n'
+    config += f'{ui.recordaudioLabel.isChecked()}\n{ui.audiospecLabel.isChecked()}'
     temp_f.write(config)
     temp_f.close()
     temp_f = open('mouse_script.txt', 'w')
@@ -186,6 +193,7 @@ def recorder():
     filename = get_video_path()
     mouse_script = ui.mousescriptText.toPlainText()
     left, top, width, height = 0, 0, screen_width, screen_height
+    record_audio = bool(ui.recordaudioLabel.isChecked())
     try:
         left = int(ui.xEdit.text())
         top = int(ui.yEdit.text())
@@ -236,6 +244,9 @@ def recorder():
     ui.automoveLabel.setEnabled(True)
     ui.recordButton.setPixmap(NewPixmap('record.png'))
     ui.pauseButton.setPixmap(NewPixmap('pause.png'))
+    if bool(ui.recordaudioLabel.isChecked()):
+        MainWindow.setWindowTitle('Screen Reader [Contacting Audio With Video]')
+        MainWindow.setWindowTitle('Screen Reader')
     out.release()
     cv2.destroyAllWindows()
     is_recording = False
