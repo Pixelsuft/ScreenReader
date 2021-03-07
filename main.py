@@ -16,19 +16,29 @@ from pyautogui import screenshot as shot
 from pyautogui import position as pos
 from numpy import array as np_array
 from PIL import ImageDraw
+from time import sleep as time_sleep
+from win32gui import IsWindowVisible as is_visible
+from win32gui import GetWindowText as get_windows_text
+from win32gui import GetWindowRect as get_windows_rect
+from win32gui import EnumWindows as get_enum_windows
 import cv2
 
 
 is_recording = False
 is_paused = False
+running = True
 screen_width = int(GetScreenSize(0))
 screen_height = int(GetScreenSize(1))
+last_windows = {}
+windows = {}
+can_check = True
 
 
-mouse_script = 'draw.rectangle(((mouse_x - 5, mouse_y - 5), (mouse_x + 5, mouse_y + 5))'
+mouse_script = 'draw.rectangle(((mouse_x - 5 - left, mouse_y - 5 - top), (mouse_x + 5 - left, mouse_y + 5 - top))'
 mouse_script += ', width=1, outline=0, fill=((255, 255, 255)))'
 video_filename = 'Recording'
 video_format = 'mp4'
+current_window = 'DISPLAY1'
 video_path = get_current_dir()
 if os_type == 'nt':
     from os import getlogin as get_user_name
@@ -48,6 +58,62 @@ def get_video_path():
                 return f'{full_path} ({i}).{video_format}'
     else:
         return f'{full_path}.{video_format}'
+
+
+def win_enum_handler(hwnd, ctx):
+    global windows
+    win_text = get_windows_text(hwnd)
+    if is_visible(hwnd) and win_text:
+        rect = get_windows_rect(hwnd)
+        windows.update({win_text: (rect[0], rect[1], rect[2], rect[3])})
+
+
+def check_windows():
+    global last_windows
+    global windows
+    global can_check
+    ui.windowsBox.addItem('1')
+    ui.windowsBox.addItem('2')
+    while running:
+        windows = {'DISPLAY1': (0, 0, screen_width, screen_height)}
+        get_enum_windows(win_enum_handler, None)
+        if not windows == last_windows:
+            last_windows = windows
+            can_check = False
+            ui.windowsBox.clear()
+            for i in windows:
+                ui.windowsBox.addItem(i)
+            ui.windowsBox.setCurrentText(current_window)
+            if bool(ui.automoveLabel.checkState()) and current_window in windows:
+                autocrop_split = ui.autocropText.text().split('x')
+                ui.xEdit.setText(str(windows[current_window][0] + int(autocrop_split[0])))
+                ui.yEdit.setText(str(windows[current_window][1] + int(autocrop_split[1])))
+                if not is_recording:
+                    ui.widthEdit.setText(
+                        str(windows[current_window][2] + int(autocrop_split[2]) - int(ui.xEdit.text()))
+                    )
+                    ui.heightEdit.setText(
+                        str(windows[current_window][3] + int(autocrop_split[3]) - int(ui.yEdit.text()))
+                    )
+            time_sleep(0.1)
+            can_check = True
+        time_sleep(1)
+
+
+def change_window(e):
+    global current_window
+    temp_text = ui.windowsBox.currentText()
+    if temp_text in windows and can_check:
+        try:
+            current_window = temp_text
+            autocrop_split = ui.autocropText.text().split('x')
+            ui.xEdit.setText(str(windows[current_window][0] + int(autocrop_split[0])))
+            ui.yEdit.setText(str(windows[current_window][1] + int(autocrop_split[1])))
+            if not is_recording:
+                ui.widthEdit.setText(str(windows[current_window][2] + int(autocrop_split[2]) - int(ui.xEdit.text())))
+                ui.heightEdit.setText(str(windows[current_window][3] + int(autocrop_split[3]) - int(ui.yEdit.text())))
+        except:
+            pass
 
 
 def stop_record():
@@ -103,10 +169,12 @@ def setup_ui():
     load_config()
     ui.recordButton.mousePressEvent = toggle_record
     ui.pauseButton.mousePressEvent = toggle_pause
+    ui.windowsBox.currentTextChanged.connect(change_window)
     ui.videopathButton.clicked.connect(select_video_path)
     ui.videopathEdit.setText(video_path)
     ui.videofilenameEdit.setText(video_filename)
     ui.videoformatEdit.setText(video_format)
+    NewThread(target=check_windows).start()
 
 
 def recorder():
@@ -140,18 +208,32 @@ def recorder():
         width = screen_width - left - 1
     if height + top > screen_height:
         height = screen_height - height - 1
+    can_check = bool(ui.automoveLabel.checkState())
     out = cv2.VideoWriter(filename, codec, 20, tuple((width, height)))
     while is_recording:
         while not is_paused:
+            try:
+                left, top = int(ui.xEdit.text()), int(ui.yEdit.text())
+            except ValueError:
+                pass
             img = shot().crop((left, top, width + left, height + top))
             draw = ImageDraw.Draw(img)
             mouse_x, mouse_y = pos()
             if mouse_script:
                 for i in mouse_script.split('\n'):
                     if i:
-                        eval(i)
+                        if i[0] == '!':
+                            img = eval(i[1:])
+                        else:
+                            eval(i)
             frame = cv2.cvtColor(np_array(img), cv2.COLOR_BGR2RGB)
             out.write(frame)
+    ui.pauseButton.setDisabled(True)
+    ui.widthEdit.setEnabled(True)
+    ui.heightEdit.setEnabled(True)
+    ui.automoveLabel.setEnabled(True)
+    ui.recordButton.setPixmap(NewPixmap('record.png'))
+    ui.pauseButton.setPixmap(NewPixmap('pause.png'))
     out.release()
     cv2.destroyAllWindows()
     is_recording = False
@@ -177,13 +259,13 @@ def toggle_record(e):
     if is_recording:
         is_paused = True
         is_recording = False
-        ui.pauseButton.setDisabled(True)
-        ui.recordButton.setPixmap(NewPixmap('record.png'))
-        ui.pauseButton.setPixmap(NewPixmap('pause.png'))
     else:
         is_paused = False
         is_recording = True
         ui.recordButton.setPixmap(NewPixmap('stop.png'))
+        ui.widthEdit.setDisabled(True)
+        ui.heightEdit.setDisabled(True)
+        ui.automoveLabel.setDisabled(True)
         video_format = ui.videoformatEdit.text()
         video_path = ui.videopathEdit.text()
         video_filename = ui.videofilenameEdit.text()
@@ -198,6 +280,7 @@ ui.setupUi(MainWindow)
 setup_ui()
 MainWindow.show()
 result = app.exec_()
+running = False
 save_config()
 stop_record()
 clear_cache()

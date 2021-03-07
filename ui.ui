@@ -322,7 +322,7 @@ border-radius: 15px;</string>
 }</string>
     </property>
     <property name="text">
-     <string>Mouse Script:</string>
+     <string>Draw Script:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -472,7 +472,7 @@ border-radius: 15px;</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="xLabel_2">
+   <widget class="QLabel" name="whLabel">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -553,6 +553,114 @@ border-radius: 15px;</string>
     </property>
     <property name="text">
      <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="windowsBox">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>230</y>
+      <width>181</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgb(174, 176, 190);</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>DISPLAY1</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QCheckBox" name="automoveLabel">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>270</y>
+      <width>171</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 15px;</string>
+    </property>
+    <property name="text">
+     <string>Auto Move</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="autocropLabel">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>300</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">* {
+	color: rgb(174, 176, 190);
+	background-color: rgba(0, 0, 0, 0);
+}</string>
+    </property>
+    <property name="text">
+     <string>Auto Crop:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="autocropText">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>330</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid rgb(174, 176, 190);
+border-radius: 15px;</string>
+    </property>
+    <property name="text">
+     <string>8x8x-8x-8</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
